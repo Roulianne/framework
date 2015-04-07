@@ -1,0 +1,43 @@
+[
+	{
+		"name"     : "init",
+		"js"       : [],
+		"css"      : ["default.css"],
+		"sections" : {
+			"top"    : {
+					"modules" : [
+						{ "src":"menu"}
+					]
+				}
+		}
+	},
+
+	{
+		"name"     : "home",
+		"extends"  : "init",
+		"css"      : ["size.css"],
+		"template" : "layout",
+		"sections" : {
+			"middle" : {
+					"modules" : [
+						{"src":"thumbnail", "list":"small"}
+					]
+				}
+		}
+	},
+
+	{
+		"name"     : "shermarks",
+		"extends"  : "init",
+		"css"      : ["size.css"],
+		"template" : "layout",
+		"sections" : {
+			"middle" : {
+					"modules" : [
+						{"src":"description"},
+						{"src":"thumbnail", "list":"block"}
+					]
+				}
+		}
+	}
+]

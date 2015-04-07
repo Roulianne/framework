@@ -1,0 +1,35 @@
+<div class="section"  ng-class="{ center:position == 0, left:position >0}">
+	<form class="form-horizontal" ng-show="edit">
+		<fieldset>
+
+			<label for="inputEmail" class="col-lg-2 control-label">Titre</label>
+			<div class="col-lg-10">
+				<input type="text" class="form-control" placeholder="titre" ng-model="newShermark.name">
+			</div>
+			<label for="textArea" class="col-lg-2 control-label">Textarea</label>
+			<div class="col-lg-10">
+				<textarea class="form-control" rows="3" ng-model="newShermark.content"></textarea>
+			</div>
+			<div class="col-lg-10">
+				<button type="submit" class="btn btn-primary" ng-click="addShermark()">Submit</button>
+			</div>
+
+		</fieldset>
+	</form>
+
+	<hr/>
+
+	<div ng-repeat="article in articles" class="shermarks">
+		<div ng-click="getOneArticle(article.id)">
+			<h2>{{article.titre}}</h2>
+			<p>{{article.resume}} (...)</p>
+		</div>
+	</div>
+</div>
+
+<div class="section" ng-class="{ center:position == 1, right:position <1}">
+	<h2>{{articleOne.titre}}</h2>
+	<p>
+		{{articleOne.text}}
+	</p>
+</div>

@@ -1,0 +1,30 @@
+{
+	"init":{
+		"template" : "layout_mobile",
+		"sections" : {
+			"header_init" : {},
+			"content_init": {}
+		}
+	},
+
+	"home":{
+		"extends"  : "init",
+		"sections" : {
+			"footer" : {
+				"opt" : "decr"
+			}
+		}
+	},
+
+	"article":{
+		"extends"  : "home",
+		"sections" : {
+			"header" : {
+				"modules" :[ "voiture", "chien"]
+			},
+			"footer":{
+				"modules" : ["voiture"]
+			}
+		}
+	}
+}

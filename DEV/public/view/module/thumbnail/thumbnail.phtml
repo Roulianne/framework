@@ -1,0 +1,20 @@
+<div class="thumb-<?= $oModule->list;?>">
+	<?php foreach( $oModule->elements as $element) :?>
+    <div>
+        <div class="wrapper animate">
+            <div class="preview" style="background-image:url('<?= $element->image;?>');"></div>
+            <div class="information">
+                <h4>
+                    <a href="<?= $element->self_url;?>" class="animate">
+                        <?= ($oModule->list == 'small')? $element->title : $element->title_tiny;?>
+                    </a>
+                </h4>
+                <span class="info"><?= $element->date;?></span><br/>
+                <a href="<?= $element->self_url;?>" class="animate">
+                    lire plus
+                </a>
+            </div>
+        </div>
+    </div>
+	<?php endforeach;?>
+</div>

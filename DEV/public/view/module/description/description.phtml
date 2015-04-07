@@ -1,0 +1,15 @@
+<?php
+    $oElement = $oModule->element;
+?>
+<div class="grid-6">
+    <img src="<?= $oElement->image ;?>" style="width:100%"/>
+</div>
+
+<div class="grid-6">
+    <h1><?= $oElement->title;?></h1>
+    <p class="auteur">
+        <?= $oElement->date;?>
+    </p>
+    <p><?= $oElement->description;?></p>
+    <a href="<?= $oElement->uri;?>" target="_blank"> voir le site </a>
+</div>
