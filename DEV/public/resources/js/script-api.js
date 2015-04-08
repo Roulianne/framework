@@ -3,7 +3,7 @@ window.onload = function(){};
 
 
     var password = 'test';
-    //var url      = 'http://sandbox.sherfi.net/julien/framework/DEV/';
+
     var url      = 'http://localhost:8888/Projets/framework/mode-simple/DEV/';
 
     function TestMethod() {
