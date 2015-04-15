@@ -10,10 +10,10 @@ use Main\App\App               as App,
 
 
 
-$oShermarks = new Shermarks();
-$aShermarks = $oShermarks->all();
+$oArticleParent = new Article();
+$aArticle = $oArticleParent->all();
 
-View::scope( 'middle.thumbnail')->elements = $aShermarks;
+View::scope( 'middle.thumbnail')->elements = $aArticle;
 
 View::make( 'general.home');
 

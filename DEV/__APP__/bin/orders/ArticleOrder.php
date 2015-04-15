@@ -1,6 +1,7 @@
 <?php
 
-use Core\Model\Order\Order as Order;
+use Core\Model\Order\Order as Order,
+    Main\Conf\Conf         as Conf;
 
 class ArticleOrder extends Order
 {
@@ -8,7 +9,7 @@ class ArticleOrder extends Order
      * [preview description]
      * @return [type] [description]
      */
-    public function preview()
+    public function image()
     {
         $sPreview = $this->getModel()->get('preview');
         $sTitre = urlencode($this->getModel()->get('titre'));
@@ -24,7 +25,7 @@ class ArticleOrder extends Order
     {
         $sDateTime = $this->getModel()->get('date');
         $sDate = current( explode(' ', $sDateTime));
-        $aDate = array_combine( array('annee','mois','jour'), explode('-',$sDate));
+        $aDate = array_combine( array( 'annee', 'mois', 'jour'), explode( '-', $sDate));
 
         return $aDate;
     }
@@ -56,6 +57,16 @@ class ArticleOrder extends Order
         $sText = $this->getModel()->get('text');
 
         return $this->_texte_resume_brut( $sText, 120);
+    }
+
+    /**
+     * [self_url description]
+     * @return [type] [description]
+     */
+    public function self_url(){
+        $sRoot = Conf::get( 'app.http_root');
+
+        return $sRoot . $this->getModel->id . '.html';
     }
 
     /**

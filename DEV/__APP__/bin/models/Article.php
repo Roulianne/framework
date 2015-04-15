@@ -3,7 +3,7 @@
 use Main\Model\Model as Model,
 	Main\Conf\Conf   as Conf;
 
-class article extends Model
+class Article extends Model
 {
 	/**
 	* [$_sModel description]
@@ -22,6 +22,15 @@ class article extends Model
 	* @var string
 	*/
 	protected $_sRefererKey = 'id';
+
+	/**
+     * [_getConf specification du DAO utilisé]
+     * @return [type] [description]
+     */
+    protected function _getConf()
+    {
+        return Conf::get('model_pdo');// configuration dans le ini => [model_pdo]
+    }
 
 	/**
 	* [getStructure description]

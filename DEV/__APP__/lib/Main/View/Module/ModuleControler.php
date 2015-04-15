@@ -26,9 +26,9 @@ class ModuleControler
      * [_setOption description]
      * @return [type] [description]
      */
-    private static function _setOption($sPathModule, $sKey, $mValue)
+    private static function _setOption( $sPathModule, $sKey, $mValue)
     {
-        self::_queryFind( $sPathModule, function ($sSection, $sModule) {})->$sKey = $mValue;;
+        self::_queryFind( $sPathModule, function ( $sSection, $sModule) {})->$sKey = $mValue;;
     }
 
     /**
@@ -37,12 +37,12 @@ class ModuleControler
      * @param  [type] $callBack    [description]
      * @return [type] [description]
      */
-    private static function _queryFind($sPathScope, $cCallBack)
+    private static function _queryFind( $sPathScope, $cCallBack)
     {
         $aModule     = array();
         $aPathModule = (array) explode( StockController::$sADD, $sPathScope);
 
-        foreach ($aPathModule as  $sPathScopeUniq) {
+        foreach ( $aPathModule as  $sPathScopeUniq) {
             list( $sSection, $sModule) = StockController::readScopeSyntax( trim( $sPathScopeUniq));
             $cCallBack( $sSection, $sModule);
         }
@@ -55,9 +55,13 @@ class ModuleControler
      * @param  [type] $aInfo [description]
      * @return [type] [description]
      */
-    private static function _computeModule($sSection, $sModule, $aInfo)
+    private static function _computeModule( $sSection, $sModule, $aInfo)
     {
         if ( array_key_exists( 'src', $aInfo) AND $sModule = $aInfo['src']) {
+
+            if( array_key_exists( 'isHideIf', $aInfo) AND self::_isHide( $aInfo['isHideIf'])){
+                return false;
+            }
 
             $sModule .= (array_key_exists('ref', $aInfo))? StockController::$sREF.$aInfo['ref'] : '';
 
@@ -68,7 +72,7 @@ class ModuleControler
             $oModule->mergeParams( StockController::find( $aInfo))
                     ->mergeParams( $aInfo);
 
-            if (!$oModule->__disable__) {
+            if ( !$oModule->__disable__) {
                 self::$_aModule[$sSection][$sModule] = $oModule;
             }
         }
@@ -76,16 +80,54 @@ class ModuleControler
     }
 
     /**
+     * [_isHide description]
+     * @param  [type]  $sFunction [description]
+     * @return boolean            [description]
+     */
+    private static function _isHide( $sFunction){
+
+
+        $sFunction = strtolower( $sFunction);
+
+        switch ( $sFunction) {
+
+            case 'webrequest':
+
+                return self::_isWebRequest();
+                break;
+
+            default:
+
+                return false;
+                break;
+        }
+
+    }
+
+     /**
+     * [_isWebRequest description]
+     * @return boolean [description]
+     */
+    protected static function _isWebRequest(){
+      return isset( $_SERVER['HTTP_USER_AGENT']);
+    }
+
+
+    /**
      * [_addModule description]
      * @param [type] $aSection [description]
      */
-    protected static function _computeSection($aSection)
+    protected static function _computeSection( $aSection)
     {
         foreach ( (array) $aSection as $sSection => $aInfoSection) {
 
             if ( array_key_exists( 'modules', $aInfoSection) AND is_array( $aInfoSection['modules'])) {
 
-                foreach ($aInfoSection['modules'] as $aInfo) {
+                if( array_key_exists( 'isHideIf', $aInfoSection) AND self::_isHide( $aInfoSection['isHideIf'])){
+                    continue;
+                }
+
+                foreach ( $aInfoSection['modules'] as $aInfo) {
 
                     if ( array_key_exists( 'src', $aInfo) AND $sModule = $aInfo['src']) {
                         self::_computeModule( $sSection, $sModule, $aInfo);
@@ -101,9 +143,9 @@ class ModuleControler
      * @param  [type] $sModule [description]
      * @return [type] [description]
      */
-    protected static function _makeModule($sModule, $sSection = '*')
+    protected static function _makeModule( $sModule, $sSection = '*')
     {
-        $sModule = ( strpos( $sModule, StockController::$sREF) !== false)? strstr($sModule, StockController::$sREF, true): $sModule;
+        $sModule = ( strpos( $sModule, StockController::$sREF) !== false)? strstr( $sModule, StockController::$sREF, true): $sModule;
 
         $sPath = App::getLoader( self::$_aLoader['module'])->load( $sModule);
 
@@ -115,7 +157,7 @@ class ModuleControler
      * @param  [type] $sPathModule [description]
      * @return [type] [description]
      */
-    public static function disable($sPathModule)
+    public static function disable( $sPathModule)
     {
         self::_setOption( $sPathModule, '__disable__', true);
 
@@ -127,7 +169,7 @@ class ModuleControler
      * @param  [type] $sPathModule [description]
      * @return [type] [description]
      */
-    public static function active($sPathModule)
+    public static function active( $sPathModule)
     {
         self::_setOption( $sPathModule, '__disable__', false);
 
@@ -139,9 +181,9 @@ class ModuleControler
      * @param  [type] $sPathModule [description]
      * @return [type] [description]
      */
-    public static function append($sPathModule)
+    public static function append( $sPathModule)
     {
-        return self::_queryFind( $sPathModule, function ($sSection, $sModule) {
+        return self::_queryFind( $sPathModule, function ( $sSection, $sModule) {
             self::$_aModuleAppend[$sSection][] = $sModule;
         });
     }
@@ -151,9 +193,9 @@ class ModuleControler
      * @param  [type] $sPathModule [description]
      * @return [type] [description]
      */
-    public static function prepend($sPathModule)
+    public static function prepend( $sPathModule)
     {
-        return self::_queryFind( $sPathModule, function ($sSection, $sModule) {
+        return self::_queryFind( $sPathModule, function ( $sSection, $sModule) {
             if( !array_key_exists( $sSection, self::$_aModulePrepend))
                 self::$_aModulePrepend[$sSection] = array();
             array_unshift( self::$_aModulePrepend[$sSection], $sModule);
@@ -166,8 +208,8 @@ class ModuleControler
      * @param  [type] $aContent    [description]
      * @return [type] [description]
      */
-    public static function scope($sPathModule)
+    public static function scope( $sPathModule)
     {
-        return self::_queryFind( $sPathModule, function ($sSection, $sModule) {});
+        return self::_queryFind( $sPathModule, function ( $sSection, $sModule) {});
     }
 }
