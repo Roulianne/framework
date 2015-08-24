@@ -76,10 +76,10 @@
 
   if ( count( $aError = Controller::exec()) == 0) {
     Header::setStatus(200);
-    Header::setContentType( Route::get()->get('display'));
+    Header::setContentType( Parameter::get()->get('display'));
     Header::exec();
 
-    if( Route::get()->get('display') == 'json'){
+    if( Parameter::get()->get('display') == 'json'){
 
       echo json_encode( App::get('data'));
 
