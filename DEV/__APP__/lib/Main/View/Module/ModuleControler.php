@@ -70,7 +70,7 @@ class ModuleControler
             $oModule = self::_makeModule( $sModule, $sSection);
 
             $oModule->mergeParams( StockController::find( $aInfo))
-                    ->mergeParams( $aInfo);
+                    ->mergeParams( $aInfo);// ajout des attributs du json en tant que paramettre
 
             if ( !$oModule->__disable__) {
                 self::$_aModule[$sSection][$sModule] = $oModule;
@@ -93,7 +93,7 @@ class ModuleControler
 
             case 'webrequest':
 
-                return self::_isWebRequest();
+                return self::_isWebRequest();// est-ce une request du navigateur et non ajax ou curl ?
                 break;
 
             default:

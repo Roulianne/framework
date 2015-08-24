@@ -423,7 +423,8 @@ class Model extends ModelCore
      * @return [type] [description]
      */
     public function getStructure(){
-        return array_keys( $this->reveal());
+        $aData = (array) $this->reveal();
+        return array_keys( $aData);
     }
 
     /**

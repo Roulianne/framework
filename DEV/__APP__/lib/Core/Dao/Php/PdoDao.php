@@ -81,7 +81,7 @@ class PdoDao extends PDO implements Accessible
                 if ($sParams[0] =='WHERE ' || $sParams[0] =='SET ') {
                     $sOperateur = $this->_buildOperateur($value);
                     $sOperateur = ($sOperateur == '')? '=': $sOperateur;
-                    $sNewValue  = mysql_real_escape_string( str_replace( $sOperateur, '', $value));
+                    $sNewValue  = str_replace( $sOperateur, '', $value);
                     $aStr[]     = "$key $sOperateur '$sNewValue'";
                 } else {
                     $aStr[]     =( is_int($key))? "$value" : "$key $value";

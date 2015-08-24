@@ -68,7 +68,7 @@ Final Class Event {
 
         foreach ($aEvents as $sEvent) {
             if( !is_null( $sEvent))
-            self::_launch( trim( $sEvent), $mValue, $aInfoEvent);
+                self::_launch( trim( $sEvent), $mValue, $aInfoEvent);
         }
 
     }

@@ -47,7 +47,7 @@ class ShermarksOrder extends Order{
 		$sReferer = $this->getModel()->getRefererValue();
 		$sDisplay = Route::get()->get('display');
 
-		return $sRoot.'/'.$sModel.'/'.$sReferer.'.'.$sDisplay;
+		return $sRoot.'/Shermarks/'.$sReferer.'.'.$sDisplay;
 	}
 
 	/**

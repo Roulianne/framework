@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+
+//test pour function jaavscript sur un autre code
+if( isset( $_GET['sleep'])){
+  sleep( intval( $_GET['sleep']));
+}
+
 // INITIALISATION DES DIFFERENT NAMESPACE
   use Main\App\App                as App,
       Main\Conf\Conf              as Conf,
@@ -66,15 +72,15 @@ session_start();
 // EXECUTION DES CONTROLLEURS
   Controller::setQuery( Route::get()->get('query'));
 
-  Controller::then('[:model:]/[:ref:]', function(){
+  Controller::then(':model/:ref', function( $sValue, $sOther){
       Controller::addCode( 'details');
-  });
+  })->with('ref', '([0-9]*)');
 
   Controller::then('home', function(){
       Controller::addCode( 'home');
   });
 
-  Controller::then('[:code:]', function(){
+  Controller::then(':code', function(){
     Header::setStatus(404);
     Header::exec();
     echo 'ERROR 404';

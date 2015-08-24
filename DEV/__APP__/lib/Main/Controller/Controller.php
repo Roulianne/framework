@@ -2,8 +2,9 @@
 
 namespace Main\Controller;
 
-use Main\App\App                   as App,
-    Main\Conf\Conf                 as Conf;
+use Main\App\App                    as App,
+    Main\Conf\Conf                  as Conf,
+    Main\Controller\ControllerRoute as ControllerRoute;
 
 class Controller
 {
@@ -29,19 +30,29 @@ class Controller
      * @return [type] [description]
      */
     private static function _findRoute(){
+        /*
+            foreach( self::$_aRoute as $sRegex => $aParams){
 
-        foreach( self::$_aRoute as $sRegex => $aParams){
+                if( preg_match( "#{$aParams['regex']}#", self::$_sQuery, $aMatches) &&
+                    count( $aMatches) == count( $aParams['params'])+1){
 
-            if( preg_match( "#{$aParams['regex']}#", self::$_sQuery, $aMatches) &&
-                count( $aMatches) == count( $aParams['params'])+1){
+                    array_shift( $aMatches);
 
-                array_shift( $aMatches);
-
-                self::$_aQuery = array_combine( $aParams['params'], $aMatches);
-                $aParams['function']();
-                return true;
+                    self::$_aQuery = array_combine( $aParams['params'], $aMatches);
+                    $aParams['function']();
+                    return true;
+                }
             }
+        */
+        foreach( self::$_aRoute as $oRoute){
+
+            if( $oRoute->match( self::$_sQuery)){
+                self::$_aQuery = $oRoute->getParam();
+                return $oRoute->call();
+            }
+
         }
+
         return false;
     }
 
@@ -95,31 +106,39 @@ class Controller
      * @return [type]         [description]
      */
     public static function then( $sRegex, $cCode){
-        preg_match_all( '`\[:(.+):]`U', $sRegex, $aMatches);
 
-        $aReplace  = array();
-        $aDefaults = ( isset( $aMatches[1]))? $aMatches[1] : array();
+        /*
+            preg_match_all( '`\[:(.+):]`U', $sRegex, $aMatches);
 
-        self::$_aRoute[$sRegex]['function'] = $cCode;
-        self::$_aRoute[$sRegex]['params']   = array();
+            $aReplace  = array();
+            $aDefaults = ( isset( $aMatches[1]))? $aMatches[1] : array();
 
-        foreach( $aDefaults as $i => $sParamRegex){
-            $sCode  = '*';
-            $sParam = $sParamRegex;
+            self::$_aRoute[$sRegex]['function'] = $cCode;
+            self::$_aRoute[$sRegex]['params']   = array();
 
-            if( strpos( $sParamRegex, '|')){
-                list( $sParam, $sCode) = explode('|', $sParamRegex);
-                $sCode = trim( $sCode);
+            foreach( $aDefaults as $i => $sParamRegex){
+                $sCode  = '*';
+                $sParam = $sParamRegex;
+
+                if( strpos( $sParamRegex, '|')){
+                    list( $sParam, $sCode) = explode('|', $sParamRegex);
+                    $sCode = trim( $sCode);
+                }
+
+                self::$_aRoute[$sRegex]['params'][] = trim( $sParam);//$aMatches[0], '(.+)?'
+
+                $sPartialRegex = ( array_key_exists( $sCode, self::$_aRegexLib))? self::$_aRegexLib[$sCode]: self::$_aRegexLib['*'];
+                $sSearch                            = $aMatches[0][$i];
+                $aReplace[ $sSearch]                = $sPartialRegex;
             }
 
-            self::$_aRoute[$sRegex]['params'][] = trim( $sParam);//$aMatches[0], '(.+)?'
+            self::$_aRoute[$sRegex]['regex']    = str_replace( array_keys( $aReplace), array_values( $aReplace), $sRegex);
+        */
+        $oRoute = new ControllerRoute(  $sRegex, $cCode);
 
-            $sPartialRegex = ( array_key_exists( $sCode, self::$_aRegexLib))? self::$_aRegexLib[$sCode]: self::$_aRegexLib['*'];
-            $sSearch                            = $aMatches[0][$i];
-            $aReplace[ $sSearch]                = $sPartialRegex;
-        }
+        self::$_aRoute[] = $oRoute;
 
-        self::$_aRoute[$sRegex]['regex']    = str_replace( array_keys( $aReplace), array_values( $aReplace), $sRegex);
+        return $oRoute;
     }
 
     /**
