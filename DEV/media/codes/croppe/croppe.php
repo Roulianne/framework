@@ -2,7 +2,7 @@
 
 use Image\Image\Image          as Image,
 	  Main\App\App               as App,
-    Main\Route\Route           as Route,
+    Main\Parameter\Parameter           as Parameter,
     Core\Header\Header         as Header,
     Main\Controller\Controller as Controller,
 
@@ -20,7 +20,7 @@ if( !is_null( $sEffect = Controller::getQuery('effect'))){
     $bFilter     = true;
 }
 
-$sImageCurrent = Controller::getQuery('file').".".Route::get()->get('display');
+$sImageCurrent = Controller::getQuery('file').".".Parameter::get()->get('display');
 
 $oBox          = new Box( Controller::getQuery('width'), Controller::getQuery('height'));
 $oPoint        = new Point( Controller::getQuery('x'), Controller::getQuery('y'));

@@ -1,8 +1,8 @@
 <?php
 
-use Core\Model\Order\Order as Order,
-    Main\Conf\Conf         as Conf,
-    Main\Route\Route       as Route;
+use Core\Model\Order\Order   as Order,
+    Main\Conf\Conf           as Conf,
+    Main\Parameter\Parameter as Parameter;
 
 class ArticleOrder extends Order
 {
@@ -69,7 +69,7 @@ class ArticleOrder extends Order
         $sRoot    = rtrim( Conf::get('app.http_root'), '/');
         $sModel   = $this->getModel()->getType();
         $sReferer = $this->getModel()->getRefererValue();
-        $sDisplay = Route::get()->get('display');
+        $sDisplay = Parameter::get()->get('display');
 
         return $sRoot.'/'.$sModel.'/'.$sReferer.'.'.$sDisplay;
     }

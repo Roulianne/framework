@@ -1,9 +1,9 @@
 <?php
-namespace Main\Route;
+namespace Main\Parameter;
 
 use Core\Request\Request        as Request;
 
-Final Class Route {
+Final Class Parameter {
 
     /** @var [type] [description] */
     private static $_oRequest = null;

@@ -47,9 +47,10 @@ class ControllerRoute{
     public function match( $sUrl){
 
         $sUrl   = trim( $sUrl, '/');
-        $sRegex = preg_replace_callback('#:([\w]+)#', array( $this, 'paramsMatch'), $this->_sPattern);
+        $sRegex = preg_replace_callback('#\[:([\w]+):\]#', array( $this, 'paramsMatch'), $this->_sPattern);
 
         $sNewRegex ="#^$sRegex$#i";
+
         if( !preg_match( $sNewRegex, $sUrl, $aMatch)){
             return false;
         }

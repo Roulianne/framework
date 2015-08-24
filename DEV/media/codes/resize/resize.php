@@ -1,9 +1,9 @@
 <?php
 
 use Image\Image\Image          as Image,
-	Main\App\App               as App,
-    Main\Route\Route           as Route,
+	  Main\App\App               as App,
     Core\Header\Header         as Header,
+    Main\Parameter\Parameter   as Parameter,
     Main\Controller\Controller as Controller,
 
     Image\Point\Point           as Point,
@@ -19,7 +19,7 @@ if( !is_null( $sEffect = Controller::getQuery('effect'))){
     $bFilter     = true;
 }
 
-$sImageCurrent = Controller::getQuery('file').".".Route::get()->get('display');
+$sImageCurrent = Controller::getQuery('file').".".Parameter::get()->get('display');
 
 $oBox          = new Box( Controller::getQuery('width'), Controller::getQuery('height'));
 

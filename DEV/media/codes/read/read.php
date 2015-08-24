@@ -1,12 +1,12 @@
 <?php
 
 use Main\App\App               as App,
-    Main\Route\Route           as Route,
+    Main\Parameter\Parameter           as Parameter,
     Core\header\Header         as Header,
     Main\Controller\Controller as Controller;
 
 
-$sImageCurrent = Controller::getQuery('file').".".Route::get()->get('display');
+$sImageCurrent = Controller::getQuery('file').".".Parameter::get()->get('display');
 $sPathMedia    = App::get('pathSrc').$sImageCurrent;
 
 App::set('path-media', $sPathMedia);

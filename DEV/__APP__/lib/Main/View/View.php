@@ -3,9 +3,9 @@ namespace Main\View;
 
 use Main\App\App                     as App,
     Main\Conf\Conf                   as Conf,
-    Main\Route\Route                 as Route,
     Main\Event\Event                 as Event,
     Main\View\Module\Module          as Module,
+    Main\Parameter\Parameter         as Parameter,
     Main\View\Structure\Structure    as Structure,
     Main\View\Module\ModuleControler as ModuleControler;
 

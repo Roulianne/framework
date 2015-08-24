@@ -1,6 +1,6 @@
 <?php
 
-use Main\Route\Route    as Route,
+use Main\Parameter\Parameter    as Parameter,
     Core\Header\Header  as Header,
     Main\App\App        as App;
 
@@ -12,4 +12,4 @@ App::set('pathSrc',      $sPathFile);
 App::set('pathDest',     $sPathFileTmp);
 App::set('option-save',  $aOption );
 
-Header::setContentType( Route::get()->get('display'));
+Header::setContentType( Parameter::get()->get('display'));

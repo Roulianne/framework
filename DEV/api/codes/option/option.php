@@ -1,12 +1,12 @@
 <?php
 
 use Main\App\App               as App,
-    Main\Route\Route           as Route,
+    Main\Parameter\Parameter           as Parameter,
     Main\Controller\Controller as Controller;
 
-$aData   =  Route::get()->getData();
+$aData   =  Parameter::get()->getData();
 
-$sMethod = Route::getRequest()->getMethod();
+$sMethod = Parameter::getRequest()->getMethod();
 
 $sRef    = Controller::getQuery('ref');
 

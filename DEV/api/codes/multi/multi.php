@@ -1,17 +1,17 @@
 <?php
 
 use Main\App\App               as App,
-    Main\Route\Route           as Route,
+    Main\Parameter\Parameter           as Parameter,
     Main\Controller\Controller as Controller;
 
-$aData =  Route::get()->getData();
+$aData =  Parameter::get()->getData();
 
-$sMethod = Route::getRequest()->getMethod();
+$sMethod = Parameter::getRequest()->getMethod();
 $sModel = ucfirst( Controller::getQuery('model'));
 
 switch( $sMethod){
   case 'POST':
-        $aData     = Route::post()->getData();
+        $aData     = Parameter::post()->getData();
         $oElements = new $sModel( $aData);
         $aData     = array('statue'=>'success', 'message'=> $sModel.' ajouter correctement');
     break;

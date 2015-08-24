@@ -11,9 +11,9 @@ if( isset( $_GET['sleep'])){
   use Main\App\App                as App,
       Main\Conf\Conf              as Conf,
       Main\View\View              as View,
-      Main\Route\Route            as Route,
       Main\Event\Event            as Event,
       Core\Header\Header          as Header,
+      Main\Parameter\Parameter    as Parameter,
       Main\Translator\Translator  as Translator,
       Main\Controller\Controller  as Controller;
 
@@ -53,7 +53,7 @@ if( isset( $_GET['sleep'])){
 
 // CONFIGURATION DE L'URL PAR DEFAULT
 
-  Route::setDefault( array(
+  Parameter::setDefault( array(
               'query'  => 'home',
               'display'=> 'html',
               'lang'   => 'fr_FR',
@@ -61,7 +61,7 @@ if( isset( $_GET['sleep'])){
 
 // MISE EN PLACE DES VARIABLES DE L'APP
 
-  $sLang = ( strpos( $s = Route::get()->get('lang'), '_') !== false)? $s : $s.'_'.strtoupper( $s);// arbitraire pour le moment
+  $sLang = ( strpos( $s = Parameter::get()->get('lang'), '_') !== false)? $s : $s.'_'.strtoupper( $s);// arbitraire pour le moment
 
   App::set( 'space', 'public');
   App::set( 'lang' , $sLang);
@@ -70,9 +70,9 @@ if( isset( $_GET['sleep'])){
   require_once( PATH_APP.'_bootstrap.php');
 
 // EXECUTION DES CONTROLLEURS
-  Controller::setQuery( Route::get()->get('query'));
+  Controller::setQuery( Parameter::get()->get('query'));
 
-  Controller::then(':model/:ref', function( $sValue, $sOther){
+  Controller::then('[:model:]/[:ref:]', function( $sValue, $sOther){
       Controller::addCode( 'details');
   })->with('ref', '([0-9]*)');
 
@@ -80,7 +80,7 @@ if( isset( $_GET['sleep'])){
       Controller::addCode( 'home');
   });
 
-  Controller::then(':code', function(){
+  Controller::then('[:code:]', function(){
     Header::setStatus(404);
     Header::exec();
     echo 'ERROR 404';

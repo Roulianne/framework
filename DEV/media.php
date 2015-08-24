@@ -4,8 +4,8 @@ session_start();
 // INITIALISATION DES DIFFERENT NAMESPACE
   use Main\App\App                as App,
       Main\Conf\Conf              as Conf,
-      Main\Route\Route            as Route,
       Core\Header\Header          as Header,
+      Main\Parameter\Parameter    as Parameter,
       Main\Controller\Controller  as Controller;
 
 // INITIALISATION DES CONSTANT
@@ -43,7 +43,7 @@ session_start();
 
 // CONFIGURATION DE L'URL PAR DEFAULT
 
-  Route::setDefault( array(
+  Parameter::setDefault( array(
               'query'  => 'picture-1',
               'display'=> 'jpg',
          ));
@@ -55,44 +55,44 @@ session_start();
 
 // EXECUTION DES CONTROLLEURS
 
-  Controller::setQuery( Route::get()->get('query'));
+  Controller::setQuery( Parameter::get()->get('query'));
 
   //redimentionne dans un conteneur media, en couvrant la zone avec decalage et ajoute un effet
-  Controller::then('filter-[:effect|s:]/cover-[:marge|I:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('filter-[:effect:]/cover-[:marge:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
   //croppe à un point donné, une zone donnée media et ajoute un effet
-  Controller::then('filter-[:effect|s:]/[:x|I:]x[:y|I:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('filter-[:effect:]/[:x:]x[:y:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'croppe');
   });
 
   //redimentionne dans un conteneur media et ajoute un effet
-  Controller::then('filter-[:effect|s:]/[:mode|s:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('filter-[:effect:]/[:mode:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
   //redimentionne dans un conteneur en mode cover media et ajoute un effet
-  Controller::then('filter-[:effect|s:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('filter-[:effect:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
-  Controller::then('cover-[:marge|I:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('cover-[:marge:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
   //croppe à un point donné, une zone donnée media
-  Controller::then('[:x|I:]x[:y|I:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('[:x:]x[:y:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'croppe');
   });
 
   //redimentionne dans un conteneur media
-  Controller::then('[:mode|s:]/[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('[:mode:]/[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
   //redimentionne dans un conteneur en mode cover media
-  Controller::then('[:width|I:]x[:height|I:]/[:file:]', function(){
+  Controller::then('[:width:]x[:height:]/[:file:]', function(){
       Controller::addCode( 'resize');
   });
 
