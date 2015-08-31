@@ -47,7 +47,6 @@ class Model extends ModelCore
 
             $aInput = array_merge($aData, $aInput);
         }
-
         return array( 'valid' => $bValid, 'data' => $aInput);
 
     }
@@ -61,10 +60,11 @@ class Model extends ModelCore
         if( is_null( $this->_aFilter)){
 
             $aStruture      = $this->getStructure();
+
             $this->_aFilter = array();
 
             foreach( $aStruture as $sChamp => $aInfo){
-                if( array_key_exists('filter', $aInfo)){
+                if( is_array( $aInfo) && array_key_exists( 'filter', $aInfo)){
                     $this->_aFilter[$sChamp] = $aInfo['filter'];
                 }
             }
@@ -221,9 +221,11 @@ class Model extends ModelCore
             $iLastId = $this->getDAO()->setCondition( $aConditions)
                                       ->create( $aData);
 
-            $aValues['id'] = $iLastId;
+            if( isset( $aData['id'])){
+                $aData['id'] = $iLastId;
+            }
 
-            $this->setData($aValues);
+            $this->setData( $aData);
         }
 
         return $this;
@@ -312,6 +314,8 @@ class Model extends ModelCore
                            ->update( $aData);
 
             StockModel::setElement( $this, $this->getType());
+
+            $this->setData( $aData);
 
         }
 
@@ -423,7 +427,7 @@ class Model extends ModelCore
      * @return [type] [description]
      */
     public function getStructure(){
-        $aData = (array) $this->reveal();
+        $aData = (array) $this->getData();
         return array_keys( $aData);
     }
 
@@ -435,13 +439,12 @@ class Model extends ModelCore
     public function screen( $aConditions = array())
     {
         $aResultObject     = array();
-        $aDefaultCondition = array('type'=>$this->getType());
+        $aDefaultCondition = ( !isset( $aConditions['type']))? array('type'=>$this->getType()) : array('type'=>$aConditions['type']);
         $aConditions       = array_merge( $aConditions, $aDefaultCondition);
 
         $aResult = $this->getDAO()->setCondition( $aConditions)
                                   ->read( $this->_aSelect);
 
-        $this->setSelect();
 
         return $this->_returnObject( $aResult);
     }

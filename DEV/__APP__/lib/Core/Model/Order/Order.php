@@ -86,8 +86,8 @@ class Order
     {
         $bPos = strpos($sMethod, '_');
         if( $bPos !== false)
-
             return $this->_existValue( $sMethod);
+
         return NULL;
     }
 

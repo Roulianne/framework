@@ -98,6 +98,19 @@ class Method
         return $this->_aValue;
     }
 
+     /**
+     * [getData description]
+     * @return [type] [description]
+     */
+    public function unsetData( $sKey)
+    {
+        if( array_key_exists( $sKey, $this->_aValue)){
+            unset( $this->_aValue[$sKey]);
+        }
+
+        return $this;
+    }
+
     /**
      * [setData description]
      * @param array $aValue [description]

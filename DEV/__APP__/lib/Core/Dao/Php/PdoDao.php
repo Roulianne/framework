@@ -54,11 +54,11 @@ class PdoDao extends PDO implements Accessible
      */
     private function _buildOperateur($sValue, $sOperateur = '')
     {
-        $sFirstLetter = $sValue[0];
+        $sFirstLetter = ( $sValue != '')? $sValue[0] : '=';
 
         if ( strstr( $this->_sOperateur, $sFirstLetter)) {
             $sOperateur .= $sFirstLetter;
-            $sNewValue = substr( $sValue, 1);
+            $sNewValue  = substr( $sValue, 1);
             $sOperateur = $this->_buildOperateur( $sNewValue, $sOperateur);
         }
 
@@ -73,15 +73,20 @@ class PdoDao extends PDO implements Accessible
     public function getFormatValues( $aData, $sParams = array('WHERE ', ' AND '))
     {
         $sValue = NULL;
-        if (! is_null( $aData ) ) {
+
+        if ( !is_null( $aData ) && !empty( $aData)) {
             $aStr   = array();
 
             foreach ($aData as $key => $value) {
 
                 if ($sParams[0] =='WHERE ' || $sParams[0] =='SET ') {
-                    $sOperateur = $this->_buildOperateur($value);
-                    $sOperateur = ($sOperateur == '')? '=': $sOperateur;
-                    $sNewValue  = str_replace( $sOperateur, '', $value);
+                    if( $value != ''){
+                        $sOperateur = $this->_buildOperateur( $value);
+                        $sOperateur = ($sOperateur == '')? '=': $sOperateur;
+                        $sNewValue  = str_replace( $sOperateur, '', $value);
+                    }else{
+                        $sNewValue = '';
+                    }
                     $aStr[]     = "$key $sOperateur '$sNewValue'";
                 } else {
                     $aStr[]     =( is_int($key))? "$value" : "$key $value";
@@ -108,9 +113,21 @@ class PdoDao extends PDO implements Accessible
         $aOrder = $this->_getCondition( 'order');
         $aLimit = $this->_getCondition( 'limit');
 
+        $aJoin  = $this->_getCondition( 'join');
+
         if ($this->_sStringCond == "") {
 
             $sWhere  = $this->getFormatValues( $aWhere );
+
+            if( count( $aJoin) > 0){
+                $aJoinTmp = array();
+                foreach( $aJoin as $sKey => $sValue){
+                    $aJoinTmp[]  = "{$sKey} = {$sValue}";
+                }
+                $sWhere .= ' AND '.implode( ' AND ', $aJoinTmp);
+            }
+
+
             $sOrder  = $this->getFormatValues( $aOrder, array('ORDER BY ', ', ')  );
             $sLimit  = $this->getFormatValues( $aLimit, array('LIMIT ', ', ')  );
 
@@ -128,7 +145,7 @@ class PdoDao extends PDO implements Accessible
         $aValues = array();
 
         if ($sth !== false) {
-            while ( false !== ($infos = $sth->fetch(PdoDao::FETCH_ASSOC)) ) {
+            while ( false !== ($infos = $sth->fetch(  PdoDao::FETCH_ASSOC)) ) {
                 $aValues[] = $infos;
             }
         }
@@ -146,13 +163,22 @@ class PdoDao extends PDO implements Accessible
     {
         $sTable = $this->_getCondition( 'type');
 
-        $sKeys    = implode(", ", array_keys( $aData ) );
-        $sValues  = implode("', '", array_values( $aData ) );
-        $sRequete = "INSERT INTO $sTable ( $sKeys ) VALUES ( '$sValues' )";
+        $aQuery   = array();
 
-        $sth = $this->query($sRequete);
+        foreach( $aData as $sKey => $sValue){
+            if( $sValue == '' || empty( $sValue)){
+                unset( $aData[$sKey]);
+            }else{
+                $aQuery[] = "{$sKey} = :{$sKey}";
+            }
+        }
 
-        if ($sth !== false) {
+        $sRequete = "INSERT INTO {$sTable} SET ".implode(", ", $aQuery );
+
+        $sth     = $this->prepare( $sRequete);
+        $result  = $sth->execute( $aData);
+
+        if ($result !== false) {
             return $this->lastInsertId();
         } else {
             return false;

@@ -25,7 +25,7 @@ class Model implements AccessModel
     {
 
         $aArgs = func_get_args();
-        $this->_init($aArgs);
+        $this->_init( $aArgs);
 
         return $this;
     }
@@ -104,6 +104,12 @@ class Model implements AccessModel
 
         if ( !empty( $aArgs)) {
             $sType = gettype( $aArgs[0]);
+
+            if( isset( $aArgs[1]) ){
+                $this->_sRefererKey = $aArgs[1];
+            }
+
+
             $this->_load( $aArgs[0], strtolower( $sType));
         }
     }
@@ -127,6 +133,15 @@ class Model implements AccessModel
         return NULL;
     }
 
+
+    /**
+     * [isExist description]
+     * @return boolean [description]
+     */
+    public function isExist(){
+        return ( count( $this->getData()) > 0);
+    }
+
     /**
      * [setData description]
      * @param [type] $oDatas [description]
@@ -141,11 +156,17 @@ class Model implements AccessModel
      * [getData description]
      * @return [type] [description]
      */
-    public function getData()
+    public function getData( $sKey = '')
     {
 
         $_aDatas = (Array) $this->_oDatas;
-        return $_aDatas;
+
+        if( $sKey != ''){
+            return $_aDatas[ $sKey];
+        }else{
+            return $_aDatas;
+        }
+
     }
 
     /**
@@ -222,13 +243,10 @@ class Model implements AccessModel
      */
     public function __set($sParam = '', $mValue)
     {
-        $sParam = strtolower( $sParam);
 
-        if ( $this->_oOrder != NULL && in_array(  $sParam, $this->_aOrderMethods)) {
-            $this->_oOrder->$sParam = $mValue;
-        } else {
-            $this->set( $sParam, $mValue);
-        }
+        $sParam = strtolower( $sParam);
+        $this->set( $sParam, $mValue);
+
     }
 
     /** [create description] */

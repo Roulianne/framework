@@ -91,6 +91,7 @@ class Request
         $this->_setOptions( $oOptions);
 
         $aPut  = array();
+
         parse_str( file_get_contents( "php://input"), $aPut);
 
         $oPut = new Put();

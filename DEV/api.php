@@ -79,7 +79,7 @@
     Header::setContentType( Parameter::get()->get('display'));
     Header::exec();
 
-    if( Parameter::get()->get('display') == 'json'){
+    if( Route::get()->get('display') == 'json'){
 
       echo json_encode( App::get('data'));
 
